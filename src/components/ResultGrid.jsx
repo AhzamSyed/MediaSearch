@@ -1,10 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPhotos, fetchVideos } from "../api/mediaApi";
 import {
-  setQuery,
   setResults,
   setError,
-  clearResults,
   setLoading,
 } from "../redux/features/searchSlice";
 import { useEffect } from "react";
@@ -55,7 +53,7 @@ const ResultGrid = () => {
   if (error) return <h1>Error</h1>;
   if (loading) return <h1>Loading...</h1>;
   return (
-    <div className="flex flex-wrap justify-between w-full gap-5 overflow-auto px-10">
+    <div className="flex flex-wrap justify-start w-full gap-5 overflow-auto px-10">
       {results.map((item, i) => {
         return (
           <div key={i}>
