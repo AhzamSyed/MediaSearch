@@ -18,3 +18,15 @@ export async function fetchVideos(query, per_page = 15) {
     })
     return res.data
 }
+
+export async function saveMedia(mediaItem, token) {
+    const res = await axios.post('http://localhost:3000/api/media/save',
+        { mediaItem },
+        {
+            headers: {
+                'x-auth-token': token
+            }
+        })
+    return res.data
+}
+

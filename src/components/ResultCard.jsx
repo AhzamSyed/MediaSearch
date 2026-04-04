@@ -1,9 +1,30 @@
-import React from "react";
-import { useDispatch } from "react-redux";
-import { addCollection, addedToast } from "../redux/features/collectionSlice";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addCollection,
+  addedToast,
+  extraReducers,
+} from "../redux/features/collectionSlice";
+import { useNavigate } from "react-router-dom";
 
 const ResultCard = ({ item }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
+  const handleSaveToUserDefaultCollection = async () => {
+    try {
+      await dispatch(extraReducers(item)).unwrap();
+      dispatch(addedToast());
+    } catch (err) {
+      if (err?.type === "AUTH_REQUIRED") {
+        navigate("/login");
+      } else {
+        console.log("Save Failed", err);
+      }
+    }
+  };
   const addToCollection = (item) => {
     dispatch(addCollection(item));
     dispatch(addedToast());
@@ -43,14 +64,21 @@ const ResultCard = ({ item }) => {
             {item.title}
           </h1>
 
-          <button
-            onClick={() => {
-              addToCollection(item);
-            }}
-            className="bg-indigo-600 hover:bg-indigo-700 active:scale-95 transition text-white text-xs rounded px-3 py-1.5 font-medium shrink-0"
-          >
-            Save
-          </button>
+          {isAuthenticated ? (
+            <button
+              onClick={handleSaveToUserDefaultCollection}
+              className="bg-green-600 hover:bg-green-700 active:scale-95 transition text-white text-xs rounded px-3 py-1.5 font-medium shrink-0"
+            >
+              Save
+            </button>
+          ) : (
+            <button
+              onClick={() => addToCollection(item)}
+              className="bg-indigo-600 hover:bg-indigo-700 active:scale-95 transition text-white text-xs rounded px-3 py-1.5 font-medium shrink-0"
+            >
+              Add to Local
+            </button>
+          )}
         </div>
       </div>
     </div>

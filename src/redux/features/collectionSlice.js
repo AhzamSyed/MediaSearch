@@ -56,7 +56,21 @@ const collectionSlice = createSlice({
                 theme: "dark",
                 transition: Slide,
             });
-        }
+        },
+        extraReducers: (builder) => {
+            builder
+                .addCase(saveMediaToUserCollection.pending, (state) => {
+                    state.loading = true;
+                })
+                .addCase(saveMediaToUserCollection.fulfilled, (state, action) => {
+                    state.loading = false;
+                    console.log("Media saved successfully");
+                })
+                .addCase(saveMediaToUserCollection.rejected, (state, action) => {
+                    state.loading = false;
+                    console.log("Save failed:", action.payload);
+                });
+        },
     },
 })
 
@@ -65,7 +79,8 @@ export const {
     removeCollection,
     clearCollection,
     addedToast,
-    removeToast } =
+    removeToast,
+    extraReducers } =
     collectionSlice.actions
 
 export default collectionSlice.reducer;
